@@ -27,7 +27,7 @@ CURRENT_USER=$(whoami)
 echo "[1/4] Creating config.json..."
 cat << EOF > config.json
 {
-  "hubUrl": "wss://monitor-hub.gdkds12.workers.dev/ws/agent",
+  "hubUrl": "wss://monitor.cloudhomes.org/ws/agent",
   "nodeId": "$NODE_ID",
   "nodeName": "$NODE_NAME",
   "secretToken": "antigravity-monitor-secret-key-2026",
