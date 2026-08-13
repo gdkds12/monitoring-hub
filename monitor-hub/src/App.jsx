@@ -49,6 +49,13 @@ export default function App() {
               return updated;
             });
             setActiveNodeId(prev => prev ? prev : msg.nodeId);
+          } else if (msg.type === 'node_deleted') {
+            setNodesMap(prev => {
+              const updated = new Map(prev);
+              updated.delete(msg.nodeId);
+              return updated;
+            });
+            setActiveNodeId(prev => (prev === msg.nodeId ? null : prev));
           } else if (msg.type === 'command_response') {
             const resolver = pendingRequests.current.get(msg.reqId);
             if (resolver) {
@@ -99,6 +106,14 @@ export default function App() {
     });
   };
 
+  const handleDeleteNode = (nodeId) => {
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+    wsRef.current.send(JSON.stringify({
+      type: 'delete_node',
+      nodeId
+    }));
+  };
+
   const handleControlContainer = (nodeId, containerId, action) => {
     return sendRpc({
       type: 'control_container',
@@ -135,6 +150,7 @@ export default function App() {
         nodes={nodesList}
         activeNodeId={activeNodeId}
         onSelectNode={(id) => setActiveNodeId(id)}
+        onDeleteNode={handleDeleteNode}
       />
 
       {/* Main Focus Node Content */}

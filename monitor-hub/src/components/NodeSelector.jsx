@@ -1,7 +1,7 @@
 import React from 'react';
-import { Server, Cpu, Database, Box, Network } from 'lucide-react';
+import { Server, Cpu, Database, Box, Network, Trash2 } from 'lucide-react';
 
-export default function NodeSelector({ nodes, activeNodeId, onSelectNode }) {
+export default function NodeSelector({ nodes, activeNodeId, onSelectNode, onDeleteNode }) {
   if (!nodes || nodes.length === 0) {
     return (
       <div className="glass-card" style={{ padding: '1.2rem', marginBottom: '1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
@@ -50,9 +50,25 @@ export default function NodeSelector({ nodes, activeNodeId, onSelectNode }) {
                   </strong>
                 </div>
 
-                <span className={`badge ${isOnline ? 'badge-emerald' : 'badge-rose'}`} style={{ fontSize: '0.65rem' }}>
-                  {isOnline ? 'ONLINE' : 'OFFLINE'}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span className={`badge ${isOnline ? 'badge-emerald' : 'badge-rose'}`} style={{ fontSize: '0.65rem' }}>
+                    {isOnline ? 'ONLINE' : 'OFFLINE'}
+                  </span>
+                  {!isOnline && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if(window.confirm('이 오프라인 노드를 삭제하시겠습니까?')) {
+                          onDeleteNode(node.id);
+                        }
+                      }}
+                      style={{ background: 'transparent', border: 'none', color: 'var(--accent-rose)', cursor: 'pointer', padding: '0.2rem', display: 'flex' }}
+                      title="오프라인 노드 삭제"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Quick Metrics */}

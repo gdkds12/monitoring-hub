@@ -181,21 +181,31 @@ export class ServerRegistry {
       try {
         const msg = JSON.parse(event.data);
 
-        // Forward RPC command to target agent
-        if (msg.type === 'control_container' || msg.type === 'get_container_logs') {
-          const targetAgent = this.agents.get(msg.nodeId);
-          if (targetAgent) {
-            this.pendingCommands.set(msg.reqId, socket);
-            targetAgent.send(JSON.stringify(msg));
-          } else {
-            socket.send(JSON.stringify({
-              type: 'command_response',
-              reqId: msg.reqId,
-              success: false,
-              error: `Target Node [${msg.nodeId}] is offline or unreachable`
-            }));
+          if (msg.type === 'control_container' || msg.type === 'get_container_logs') {
+            const targetAgent = this.agents.get(msg.nodeId);
+            if (targetAgent) {
+              this.pendingCommands.set(msg.reqId, socket);
+              targetAgent.send(JSON.stringify(msg));
+            } else {
+              socket.send(JSON.stringify({
+                type: 'command_response',
+                reqId: msg.reqId,
+                success: false,
+                error: `Target Node [${msg.nodeId}] is offline or unreachable`
+              }));
+            }
+          } else if (msg.type === 'delete_node') {
+            if (this.nodeStates.has(msg.nodeId)) {
+              const state = this.nodeStates.get(msg.nodeId);
+              if (!state.online) {
+                this.nodeStates.delete(msg.nodeId);
+                this.broadcastToDashboards({
+                  type: 'node_deleted',
+                  nodeId: msg.nodeId
+                });
+              }
+            }
           }
-        }
       } catch (err) {
         console.error('[DO Registry] Dashboard message error:', err);
       }

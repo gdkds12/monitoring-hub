@@ -1,6 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "monitor-hub",
+  "routes": [
+    {
+      "pattern": "monitor.cloudhomes.org",
+      "custom_domain": true
+    }
+  ],
   "main": "src/worker.js",
   "compatibility_date": "2026-08-12",
   "assets": {
