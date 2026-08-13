@@ -1,0 +1,16 @@
+[Unit]
+Description=Antigravity Monitor Agent
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/.openclaw/workspace/monitoring-hub/monitor-agent
+ExecStart=/usr/bin/node agent.js
+Restart=always
+RestartSec=5
+# Adjust these according to your needs
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "monitor-hub",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-12",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SERVER_REGISTRY",
+        "class_name": "ServerRegistry"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ServerRegistry"]
+    }
+  ]
+}

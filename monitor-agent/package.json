@@ -1,0 +1,14 @@
+{
+  "name": "monitor-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js"
+  },
+  "dependencies": {
+    "systeminformation": "^5.33.1",
+    "ws": "^8.18.0"
+  }
+}
