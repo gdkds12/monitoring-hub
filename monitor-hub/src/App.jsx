@@ -37,18 +37,18 @@ export default function App() {
             const newMap = new Map();
             (msg.nodes || []).forEach(n => newMap.set(n.id, n));
             setNodesMap(newMap);
-            if (newMap.size > 0 && !activeNodeId) {
-              setActiveNodeId(Array.from(newMap.keys())[0]);
-            }
+            
+            setActiveNodeId(prev => {
+              if (!prev && newMap.size > 0) return Array.from(newMap.keys())[0];
+              return prev;
+            });
           } else if (msg.type === 'node_update') {
             setNodesMap(prev => {
               const updated = new Map(prev);
               updated.set(msg.nodeId, msg.data);
               return updated;
             });
-            if (!activeNodeId) {
-              setActiveNodeId(msg.nodeId);
-            }
+            setActiveNodeId(prev => prev ? prev : msg.nodeId);
           } else if (msg.type === 'command_response') {
             const resolver = pendingRequests.current.get(msg.reqId);
             if (resolver) {
